@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateJSON, hasApiKey } from "@/lib/llm";
-import { loadStore } from "@/lib/store";
+import { getAllDocs } from "@/lib/store";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -25,17 +25,17 @@ export async function POST() {
     );
   }
 
-  const store = await loadStore();
-  if (store.docs.length === 0) {
+  const docs = await getAllDocs();
+  if (docs.length === 0) {
     return NextResponse.json(
-      { error: "No documents ingested yet. Click 'Ingest documents' first." },
+      { error: "No documents ingested yet. Load a record family first." },
       { status: 400 }
     );
   }
 
   const today = new Date().toISOString().slice(0, 10);
 
-  const corpus = store.docs
+  const corpus = docs
     .map((d) => `=== DOCUMENT: ${d.source} ===\n${d.fullText}`)
     .join("\n\n");
 

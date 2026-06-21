@@ -4,7 +4,13 @@ import path from "path";
 import { extractText } from "@/lib/extract-text";
 import { chunkText } from "@/lib/chunk";
 import { embed, hasApiKey } from "@/lib/llm";
-import { saveStore, type Chunk, type DocRecord } from "@/lib/store";
+import {
+  resetStore,
+  saveRecordFamily,
+  hasVectorStore,
+  type Chunk,
+  type DocRecord,
+} from "@/lib/store";
 import { isValidDataset } from "@/lib/datasets";
 
 export const runtime = "nodejs";
@@ -16,6 +22,15 @@ export async function POST(req: Request) {
       {
         error:
           "Gemini API key missing. Copy .env.local.example to .env.local and paste a free key from https://aistudio.google.com/app/apikey, then restart the dev server.",
+      },
+      { status: 400 }
+    );
+  }
+  if (!hasVectorStore()) {
+    return NextResponse.json(
+      {
+        error:
+          "Vector store not configured. Add UPSTASH_VECTOR_REST_URL and UPSTASH_VECTOR_REST_TOKEN (free at https://console.upstash.com).",
       },
       { status: 400 }
     );
@@ -46,24 +61,17 @@ export async function POST(req: Request) {
       const pieces = chunkText(fullText);
       for (let i = 0; i < pieces.length; i++) {
         const embedding = await embed(pieces[i]);
-        chunks.push({
-          id: `${file}#${i}`,
-          source: file,
-          text: pieces[i],
-          embedding,
-        });
+        chunks.push({ id: `${file}#${i}`, source: file, text: pieces[i], embedding });
       }
     }
 
-    await saveStore({ docs, chunks });
+    await resetStore();
+    await saveRecordFamily(docs, chunks);
 
     return NextResponse.json({
       ok: true,
       dataset,
-      documents: docs.map((d) => ({
-        source: d.source,
-        chars: d.fullText.length,
-      })),
+      documents: docs.map((d) => ({ source: d.source, chars: d.fullText.length })),
       chunkCount: chunks.length,
     });
   } catch (err: unknown) {

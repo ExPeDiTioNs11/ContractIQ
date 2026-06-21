@@ -52,7 +52,7 @@ export default function ChatPanel({
   onAsk: (q: string) => void;
   suggestions: string[];
   busy: string | null;
-  chatRef: RefObject<HTMLDivElement | null>;
+  chatRef: RefObject<HTMLDivElement>;
 }) {
   return (
     <article className={`${PANEL} flex flex-col w-full lg:h-full`}>

@@ -45,11 +45,20 @@ async function withRetry<T>(fn: () => Promise<T>, attempts = 5): Promise<T> {
   throw lastErr;
 }
 
-/** Embed a single piece of text into a vector. */
+/** Truncate to the first N dimensions (Gemini embeddings are MRL) and L2-normalize. */
+function shrink(vec: number[], dim = 768): number[] {
+  const v = vec.slice(0, dim);
+  let sum = 0;
+  for (const x of v) sum += x * x;
+  const norm = Math.sqrt(sum) || 1;
+  return v.map((x) => x / norm);
+}
+
+/** Embed a single piece of text into a vector (768-d, to match the vector store). */
 export async function embed(text: string): Promise<number[]> {
   const model = client().getGenerativeModel({ model: EMBED_MODEL });
   const res = await withRetry(() => model.embedContent(text));
-  return res.embedding.values;
+  return shrink(res.embedding.values);
 }
 
 /** Plain text generation. */

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { embed, generate, hasApiKey } from "@/lib/llm";
-import { loadStore, topK } from "@/lib/store";
+import { searchChunks } from "@/lib/store";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -18,19 +18,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Question is required." }, { status: 400 });
   }
 
-  const store = await loadStore();
-  if (store.chunks.length === 0) {
-    return NextResponse.json(
-      { error: "No documents ingested yet. Click 'Ingest documents' first." },
-      { status: 400 }
-    );
-  }
-
   const today = new Date().toISOString().slice(0, 10);
 
   try {
     const queryEmbedding = await embed(question);
-    const matches = topK(store.chunks, queryEmbedding, 5);
+    const matches = await searchChunks(queryEmbedding, 5);
+
+    if (matches.length === 0) {
+      return NextResponse.json(
+        { error: "No documents ingested yet. Load a record family first." },
+        { status: 400 }
+      );
+    }
 
     const context = matches
       .map((m, i) => `[${i + 1}] (source: ${m.source})\n${m.text}`)

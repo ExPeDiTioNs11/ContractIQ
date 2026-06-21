@@ -2,7 +2,13 @@ import { NextResponse } from "next/server";
 import { extractFromBuffer } from "@/lib/extract-text";
 import { chunkText } from "@/lib/chunk";
 import { embed, hasApiKey } from "@/lib/llm";
-import { saveStore, type Chunk, type DocRecord } from "@/lib/store";
+import {
+  resetStore,
+  saveRecordFamily,
+  hasVectorStore,
+  type Chunk,
+  type DocRecord,
+} from "@/lib/store";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -11,6 +17,15 @@ export async function POST(req: Request) {
   if (!hasApiKey()) {
     return NextResponse.json(
       { error: "Gemini API key missing. See .env.local.example." },
+      { status: 400 }
+    );
+  }
+  if (!hasVectorStore()) {
+    return NextResponse.json(
+      {
+        error:
+          "Vector store not configured. Add UPSTASH_VECTOR_REST_URL and UPSTASH_VECTOR_REST_TOKEN (free at https://console.upstash.com).",
+      },
       { status: 400 }
     );
   }
@@ -34,7 +49,6 @@ export async function POST(req: Request) {
     const chunks: Chunk[] = [];
     const skipped: string[] = [];
 
-    // Keep filenames in order so the "record family" lineage stays meaningful.
     files.sort((a, b) => a.name.localeCompare(b.name));
 
     for (const file of files) {
@@ -54,12 +68,7 @@ export async function POST(req: Request) {
       const pieces = chunkText(fullText);
       for (let i = 0; i < pieces.length; i++) {
         const embedding = await embed(pieces[i]);
-        chunks.push({
-          id: `${file.name}#${i}`,
-          source: file.name,
-          text: pieces[i],
-          embedding,
-        });
+        chunks.push({ id: `${file.name}#${i}`, source: file.name, text: pieces[i], embedding });
       }
     }
 
@@ -73,14 +82,12 @@ export async function POST(req: Request) {
       );
     }
 
-    await saveStore({ docs, chunks });
+    await resetStore();
+    await saveRecordFamily(docs, chunks);
 
     return NextResponse.json({
       ok: true,
-      documents: docs.map((d) => ({
-        source: d.source,
-        chars: d.fullText.length,
-      })),
+      documents: docs.map((d) => ({ source: d.source, chars: d.fullText.length })),
       chunkCount: chunks.length,
       skipped,
     });

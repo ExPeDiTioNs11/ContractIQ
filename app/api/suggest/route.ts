@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateJSON, hasApiKey } from "@/lib/llm";
-import { loadStore } from "@/lib/store";
+import { getAllDocs } from "@/lib/store";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -15,8 +15,8 @@ export async function POST() {
     );
   }
 
-  const store = await loadStore();
-  if (store.docs.length === 0) {
+  const docs = await getAllDocs();
+  if (docs.length === 0) {
     return NextResponse.json(
       { error: "No documents ingested yet." },
       { status: 400 }
@@ -24,7 +24,7 @@ export async function POST() {
   }
 
   // The documents are short, so we can show the model all of them.
-  const corpus = store.docs
+  const corpus = docs
     .map((d) => `=== ${d.source} ===\n${d.fullText}`)
     .join("\n\n");
 
