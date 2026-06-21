@@ -1,0 +1,26 @@
+FROM:    Klaus Berger <k.berger@rheinland-property.de>
+TO:      Facilities <facilities@nimbus-software.de>
+CC:      Legal <legal@rheinland-property.de>
+DATE:    10 June 2025, 14:32
+SUBJECT: RE: Request to sublet part of the 3rd floor (Lease CL-2024-118)
+
+Dear Ms. Demir,
+
+Thank you for your request of 2 June 2025.
+
+On behalf of the Landlord, and as required under Section 7.1 of the Lease,
+we hereby give our WRITTEN CONSENT to the following:
+
+  - The Tenant (Nimbus Software GmbH) may sublet approximately 80 m2 of
+    the 3rd floor Premises to Orbit Analytics GmbH.
+  - This consent is valid until 31 December 2026.
+  - The Tenant remains fully liable under the Lease for the entire Premises,
+    including the sublet portion.
+  - Any extension of the sublease beyond 31 December 2026 requires fresh
+    written consent.
+
+All other terms of the Lease remain unchanged.
+
+Kind regards,
+Klaus Berger
+Asset Manager, Rheinland Property Holding GmbH

@@ -1,0 +1,21 @@
+FROM: DataStream GmbH (Billing)
+TO: Meridian Capital Partners GmbH
+DATE: 1 August 2025
+CHANNEL: SMS / Customer Notice
+
+-------------------------------------------------------------
+Dear valued customer,
+
+As a thank-you for your loyalty, we are applying a special
+10% LOYALTY DISCOUNT to your monthly subscription fee
+(Contract MSA-2025-0042).
+
+- Discount: 10% off the monthly subscription fee
+- Valid for: 3 months (August, September and October 2025)
+- Automatically applied to your invoices for this period
+- After 31 October 2025, standard pricing resumes
+
+No action is required on your part.
+
+Thank you for choosing DataStream.
+-------------------------------------------------------------

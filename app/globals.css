@@ -1,0 +1,90 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base things Tailwind utilities can't express on the page itself */
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+  body {
+    font-family: "Inter", system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+    background: radial-gradient(1200px 600px at 80% -10%, #f7f5fb, transparent),
+      radial-gradient(1000px 500px at 0% -20%, #eef2fb, transparent), #f4f5f7;
+    color: #15293c;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* desktop = app shell, the columns scroll, not the page */
+  @media (min-width: 1024px) {
+    html,
+    body {
+      overflow: hidden;
+    }
+  }
+}
+
+/* Reusable pieces that need real CSS (animations, scrollbar) */
+@layer components {
+  .scrollbar-soft {
+    scrollbar-width: thin;
+    scrollbar-color: #cad3dd transparent;
+  }
+  .scrollbar-soft::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .scrollbar-soft::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-soft::-webkit-scrollbar-thumb {
+    background: #cfd7e1;
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  .scrollbar-soft::-webkit-scrollbar-thumb:hover {
+    background: #9aa7b8;
+    background-clip: content-box;
+  }
+
+  /* chat "typing…" dots */
+  .typing {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 13px 15px;
+  }
+  .typing span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #92a3b2;
+    animation: typing-bounce 1.25s infinite ease-in-out both;
+  }
+  .typing span:nth-child(2) {
+    animation-delay: 0.16s;
+  }
+  .typing span:nth-child(3) {
+    animation-delay: 0.32s;
+  }
+  @keyframes typing-bounce {
+    0%, 70%, 100% { opacity: 0.3; transform: translateY(0); }
+    35% { opacity: 1; transform: translateY(-4px); }
+  }
+
+  /* blinking caret while the answer streams in */
+  .streaming-text::after {
+    content: "▍";
+    display: inline-block;
+    margin-left: 1px;
+    color: #1c87b0;
+    animation: caret-blink 1s steps(1) infinite;
+  }
+  @keyframes caret-blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+  }
+}

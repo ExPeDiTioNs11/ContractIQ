@@ -1,0 +1,23 @@
+FROM:    People & Culture <hr@helios-digital.de>
+TO:      All Staff <all@helios-digital.de>
+DATE:    5 February 2025, 09:15
+SUBJECT: Updated Company-Wide Remote Work Policy (effective 1 March 2025)
+
+Dear colleagues,
+
+As part of our return-to-office initiative, the company is updating its
+remote work policy.
+
+  NEW POLICY (effective 1 March 2025):
+  - Remote work is reduced to a MAXIMUM OF ONE (1) DAY PER WEEK for all
+    employees.
+  - This replaces any previous standard of two days per week.
+  - This general policy overrides individual employment contracts UNLESS
+    a separate individual arrangement has been agreed in writing with an
+    employee.
+
+Team lead approval is required for the chosen remote day.
+
+Thank you for your cooperation,
+People & Culture
+Helios Digital GmbH
